@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: >
+      Order fact table — one row per order (grain: order_id) with payment amounts
+      pivoted by payment method. The central table for revenue analysis.
+    columns:
+      - name: order_id
+        description: Primary key of the order.
+        data_tests: [unique, not_null]
+      - name: customer_id
+        description: Foreign key to dim_customers.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_date
+        description: Date the order was placed.
+      - name: status
+        description: Order lifecycle status.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+      - name: credit_card_amount
+        description: Amount paid by credit card, in dollars.
+      - name: bank_transfer_amount
+        description: Amount paid by bank transfer, in dollars.
+      - name: coupon_amount
+        description: Amount paid by coupon, in dollars.
+      - name: gift_card_amount
+        description: Amount paid by gift card, in dollars.
+      - name: amount
+        description: Total order amount across all payment methods, in dollars.
+        data_tests: [not_null]
+
+  - name: dim_customers
+    description: >
+      Customer dimension — one row per customer (grain: customer_id) enriched with
+      order history metrics. Customers with no orders are kept with zero counts.
+    columns:
+      - name: customer_id
+        description: Primary key of the customer.
+        data_tests: [unique, not_null]
+      - name: first_name
+        description: Customer first name.
+      - name: last_name
+        description: Customer last initial (anonymised).
+      - name: first_order_date
+        description: Date of the customer's first order (null if none).
+      - name: most_recent_order_date
+        description: Date of the customer's most recent order (null if none).
+      - name: number_of_orders
+        description: Total number of orders placed by the customer.
+        data_tests: [not_null]
+      - name: lifetime_value
+        description: Sum of all payment amounts across the customer's orders, in dollars.
+        data_tests: [not_null]

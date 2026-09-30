@@ -1,0 +1,10 @@
+# Local DuckDB profile — no cloud account or credentials required.
+# To run on Snowflake / BigQuery / Databricks, add a new output here
+# (or in ~/.dbt/profiles.yml) using that adapter and switch `target`.
+dbt_analytics_demo:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: dbt_analytics_demo.duckdb
+      threads: 4

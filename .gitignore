@@ -1,0 +1,20 @@
+# dbt artifacts
+target/
+dbt_packages/
+logs/
+
+# Local warehouse
+*.duckdb
+*.duckdb.wal
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+.user.yml

@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw jaffle-shop-style e-commerce data, loaded from CSV via `dbt seed`.
+    schema: raw
+    tables:
+      - name: raw_customers
+        description: One row per customer as exported from the source app.
+        columns:
+          - name: id
+            description: Primary key of the customer.
+            data_tests: [unique, not_null]
+      - name: raw_orders
+        description: One row per order.
+        columns:
+          - name: id
+            description: Primary key of the order.
+            data_tests: [unique, not_null]
+      - name: raw_payments
+        description: One row per payment. An order may have multiple payments. Amounts are stored in cents.
+        columns:
+          - name: id
+            description: Primary key of the payment.
+            data_tests: [unique, not_null]

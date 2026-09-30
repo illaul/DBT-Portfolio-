@@ -1,0 +1,32 @@
+name: dbt_analytics_demo
+version: "1.0.0"
+config-version: 2
+
+profile: dbt_analytics_demo
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+# Materialization strategy lives here, not in each model:
+# staging = lightweight views over raw data, marts = persisted tables for BI.
+models:
+  dbt_analytics_demo:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
+
+seeds:
+  dbt_analytics_demo:
+    +schema: raw
+    raw_orders:
+      +column_types:
+        order_date: date
